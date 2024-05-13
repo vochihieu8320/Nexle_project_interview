@@ -1,0 +1,19 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: Aa@123456
+  host: 127.0.0.1
+
+development:
+  <<: *default
+  database: entrance_test
+
+test:
+  <<: *default
+  database: entrance_test
+
+production:
+  <<: *default
+  database: entrance_test
