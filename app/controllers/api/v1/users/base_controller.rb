@@ -2,8 +2,9 @@
 
 module Api
   module V1
-    module Clients
+    module Users
       class BaseController < ApplicationController
+        include Api::V1::ErrorHandler
       end
     end
   end
