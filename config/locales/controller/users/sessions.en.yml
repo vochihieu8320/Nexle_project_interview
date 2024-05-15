@@ -1,0 +1,7 @@
+en:
+  user:
+    sign_in:
+      errors:
+        invalid_email_or_password: "Invalid email or password"
+        invalid_password_length: "Password must be between %{min_length} and %{max_length} characters long"
+        invalid_refresh_token: "Invalid refresh token"

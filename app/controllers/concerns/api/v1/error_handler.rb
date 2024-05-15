@@ -24,12 +24,11 @@ module Api
       end
 
       def handle_standard_error(exception)
-        render json: { errors: 'An error occurred. Please try again later.' }, status: :internal_server_error
+        render json: { errors: I18n.t("errors.standard_errors") }, status: :internal_server_error
       end
   
       def record_not_found(exception)
-        message = 'The requested resource was not found.'
-        render json: { errors: exception.message }, status: :not_found
+        render json: { errors: I18n.t("errors.not_found") }, status: :not_found
       end
   
       def record_invalid(exception)

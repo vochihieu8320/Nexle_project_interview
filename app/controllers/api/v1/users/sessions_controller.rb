@@ -15,11 +15,26 @@ module Api
         def sign_in
           user = User.find_by(email: params[:email])
           validate_password_length(params[:password])
-          raise Errors::LoginError, "Invalid email or password" unless user&.authenticate(params[:password])
-
+          validate_password_valid(user, params[:password])
           token, refreshToken = generate_and_save_tokens_for(user)
           render json: { user: UserSerializer.new(user).to_h, token: token, refreshToken: refreshToken }, status: :ok
         end
+
+        def sign_out
+          current_resource.tokens.destroy_all
+          head :no_content
+        end
+
+        def refresh_token
+          current_token = current_resource.tokens.find_by(refresh_token: params[:refresh_token])
+          raise Errors::InvalidTokenError, I18n.t("user.sign_in.errors.invalid_refresh_token") unless current_token
+
+          current_resource.tokens.destroy_all
+          token, refreshToken = generate_and_save_tokens_for(current_resource)
+          render json: { token: token, refreshToken: refreshToken }, status: :ok
+        end
+
+        private
 
         def sign_up_params
           params.permit(:first_name, :last_name, :email, :password)
@@ -32,10 +47,19 @@ module Api
           [token, refreshToken]
         end
 
+        def validate_password_valid(user, password)
+          return if user&.authenticate(password)
+
+          raise Errors::LoginError, I18n.t("user.sign_in.errors.invalid_email_or_password")
+        end
+
         def validate_password_length(password)
-          unless password.length.between?(8, 20)
-            raise Errors::LoginError, "Password must be between 8 and 20 characters long"
-          end
+          password_min_length = Settings.user.password.min_length
+          password_max_length = Settings.user.password.max_length
+
+          return if password.length.between?(password_min_length, password_max_length)
+          
+          raise Errors::LoginError, I18n.t("user.sign_in.errors.invalid_password_length", min_length: password_min_length, max_length: password_max_length)
         end
       end
     end

@@ -1,0 +1,4 @@
+en:
+  errors:
+    standard_errors: "An error occurred. Please try again later."
+    not_found: "The requested resource was not found."

@@ -28,7 +28,7 @@ module Api
         end
 
         def current_resource
-          @current_resource ||= User.find(decode_token['user_id'])
+          User.find(decode_token['user_id'])
         end
       end
     end
