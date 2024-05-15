@@ -6,6 +6,7 @@ module Api
       extend ActiveSupport::Concern
 
       included do
+        rescue_from StandardError, with: :handle_standard_error
         rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
         rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
         rescue_from Errors::LoginError, with: :login_error
@@ -23,7 +24,7 @@ module Api
       end
 
       def handle_standard_error(exception)
-        render json: { errors: exception.message }, status: :internal_server_error
+        render json: { errors: 'An error occurred. Please try again later.' }, status: :internal_server_error
       end
   
       def record_not_found(exception)

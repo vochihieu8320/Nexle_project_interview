@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  SETTING_PASSWORD = Settings.user.password
+
   before_save :encrypt_password
 
   has_many :tokens, dependent: :destroy
@@ -8,7 +10,7 @@ class User < ApplicationRecord
   validates :email, :first_name, :last_name, :password, presence: true, on: :create
   validates :email, uniqueness: true
   validates :email, format: URI::MailTo::EMAIL_REGEXP
-  validates :password, length: { in: 8..20 }
+  validates :password, length: { in: SETTING_PASSWORD.min_length..SETTING_PASSWORD.max_length }
 
   def authenticate(password)
     BCrypt::Password.new(self.password) == password
