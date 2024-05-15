@@ -13,6 +13,8 @@ Rails.application.routes.draw do
         collection do
           post :sign_up, to: 'users/sessions#create'
           post :sign_in, to: 'users/sessions#sign_in'
+          post :sign_out, to: 'users/sessions#sign_out'
+          post :refresh_token, to: 'users/sessions#refresh_token'
         end
       end
     end
