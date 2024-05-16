@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validates :email, :first_name, :last_name, :password, presence: true, on: :create
   validates :email, uniqueness: true
   validates :email, format: URI::MailTo::EMAIL_REGEXP
+  validates :email, uniqueness: { case_sensitive: false }
   validates :password, length: { in: SETTING_PASSWORD.min_length..SETTING_PASSWORD.max_length }
 
   def authenticate(password)
